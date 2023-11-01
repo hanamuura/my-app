@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-export const Header = ({children, options, query, setQuery, search}) => {
+export const Header = ({filterOptions, children, options, query, setQuery, search}) => {
     return (
         <Container>
             <Title>{children}</Title>
@@ -12,19 +12,34 @@ export const Header = ({children, options, query, setQuery, search}) => {
                     onKeyPress = {search}
                     placeholder="search"
                 />
-                <select
-                    value={query.order}
-                    onChange={e => setQuery({...query, order: e.target.value})}
-                >
-                    <option disabled value="">select one...</option>
-                    {options.map(el => 
-                        <option key={el.id}>{el.data}</option>
-                    )}
-                </select>
+                <FilterBox>
+                    <select
+                        value={query.order}
+                        onChange={e => setQuery({...query, order: e.target.value})}
+                    >
+                        <option disabled value="">select one...</option>
+                        {options.map(el =>
+                            <option key={el.id}>{el.data}</option>
+                        )}
+                    </select>
+                    <select
+                        value={query.filter}
+                        onChange={e => setQuery({...query, filter: e.target.value})}
+                    >
+                        <option disabled value="">select one...</option>
+                        {filterOptions.map(el =>
+                            <option key={el.id}>{el.data}</option>
+                        )}
+                    </select>
+                </FilterBox>
             </FilterContainer>
         </Container>
     )
 }
+
+const FilterBox = styled.div`
+  display: flex;
+`
 
 const FilterContainer = styled.div`
     display: flex;
