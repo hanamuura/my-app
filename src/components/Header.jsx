@@ -1,16 +1,22 @@
 import React from "react";
 import styled from "styled-components";
 
-export const Header = ({children, options, query, setQuery}) => {
+export const Header = ({children, options, query, setQuery, search}) => {
     return (
         <Container>
             <Title>{children}</Title>
             <FilterContainer>
                 <SearchBar  
-                    value = {query}
-                    onChange = {e => setQuery(prev => prev = e.target.value)}
+                    value = {query.search}
+                    onChange = {e => setQuery({...query, search: e.target.value})}
+                    onKeyPress = {search}
+                    placeholder="search"
                 />
-                <select>
+                <select
+                    value={query.order}
+                    onChange={e => setQuery({...query, order: e.target.value})}
+                >
+                    <option disabled value="">select one...</option>
                     {options.map(el => 
                         <option key={el.id}>{el.data}</option>
                     )}

@@ -2,15 +2,15 @@ import react from "react";
 import { Book } from "./Book";
 import styled from "styled-components";
 
-export const Books = ({books, children}) => {
+export const Books = ({books}) => {
+    
     return (
         <Container>
-            {books.map(book => 
-                <Book key={book.id} title={book.title} description={book.description} body={book.body}/>
-            )}
+            {books.length? books.map(book => <Book volumeInfo={book.volumeInfo}/>) : <>no books</>}
         </Container>
     )
 }
+
 
 const Container = styled.div`
     display: flex;

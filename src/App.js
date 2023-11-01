@@ -9,22 +9,25 @@ function App() {
   const [books, setBooks] = useState([]);
 
   const [options, setOptions] = useState([
-    {id: 0, data: "value1"},
-    {id: 1, data: "value2"},
-    {id: 2, data: "value3"},
+    {id: 0, data: "relevance"},
+    {id: 1, data: "newest"},
   ])
 
-  const [query, setQuery] = useState("flowers");
+  const [count, setCount] = useState(0);
+
+  const [query, setQuery] = useState(
+    {filter: "", order: "", search: "qwer"}
+  );
   
-  const searchBooks = () => {
-    axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query}:keyes&key=AIzaSyDjJ0e_iIZTMOwJ-DKP8r0qKKofxY_4_Sk`)
+  const searchBooks = (e) => {
+    if(e.code === "Enter"){
+      console.log(query);
+      axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query.search}&orderBy=${query.order}&key=AIzaSyDjJ0e_iIZTMOwJ-DKP8r0qKKofxY_4_Sk`)
       .then(res => {
         setBooks(res.data.items);
-        setTimeout(() => {
-          console.log(books);
-        }, 0)
       })
-      .catch(rej => console.log(rej))
+      .catch(rej => console.log(rej));
+    }
   } 
 
   const [loading, setLoading] = useState(false);
@@ -34,18 +37,18 @@ function App() {
     axios.get(`https://www.googleapis.com/books/v1/volumes?q=flowers:keyes&key=AIzaSyDjJ0e_iIZTMOwJ-DKP8r0qKKofxY_4_Sk`)
       .then(res => {
           setBooks(res.data.items);
+          console.log(res);
           setLoading(false);
-          console.log(books, res.data);
+          setCount(res.data.totalItems)
       })
       .catch(rej => console.log(rej));
-    console.log(books.data);
   }, [])
+
 
   return (
     <div className="App">
-      <Header query={query} setQuery={setQuery} options={options}>set of books 1</Header>
-      <button onClick={searchBooks}>asdf</button>
-      {loading? <>still loading...</> : <Books books={books}/>}
+      <Header query={query} setQuery={setQuery} options={options} search={searchBooks}>{count? `total Items: ${count}` : null}</Header>
+      {loading && !books.length? <>still loading...</> : <Books books={books}/>} 
     </div>
   );
 }
