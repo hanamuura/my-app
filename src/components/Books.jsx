@@ -7,14 +7,13 @@ export const Books = ({books}) => {
     return (
         <Container>
             {books.length? books.map(book =>
-                <Link key={book.id} to={`/books/${book.id}`}>
+                <Link style={{textDecoration: "none", color: "black"}} key={book.id} to={`/books/${book.id}`}>
                     <Book volumeInfo={book.volumeInfo}/>
                 </Link>
             ) : <>no books</>}
         </Container>
     )
 }
-
 
 const Container = styled.div`
     display: flex;

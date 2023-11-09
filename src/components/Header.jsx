@@ -65,5 +65,5 @@ const Container = styled.div`
     height: 100px;
     align-items: center;
     justify-content: space-around;
-    background-color: #aaaaaa;
+    background-color: #675a5a;
 `
