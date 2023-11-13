@@ -3,11 +3,12 @@ import axios from "axios";
 import {Header} from "../components/Header";
 import {Books} from "../components/Books";
 import styled from "styled-components";
+import ErrorBoundary from "../components/ErrorBoundry"
 
 export function StartPage(){
     const [books, setBooks] = useState([]);
     const [startIndex, setStartIndex] = useState(0);
-    const [totalItems, setTotalItems] = useState(30);
+    const [totalItems, setTotalItems] = useState(0);
 
     const [options, setOptions] = useState([
         {id: 0, data: "relevance"},
@@ -49,6 +50,7 @@ export function StartPage(){
             .then(res => {
                 setBooks(res.data.items);
                 console.log(res.data.items);
+                setTotalItems(prev => books.length)
                 setLoading(false);
             })
             .catch(rej => console.log(rej));
@@ -72,8 +74,8 @@ export function StartPage(){
     return (
         <App>
             <Header filterOptions={filterOptions} query={query} setQuery={setQuery} options={options} search={searchBooks}>{!loading? `total Items: ${totalItems}` : null}</Header>
-            {loading && !books.length? <>still loading...</> : <Books books={books}/>}
-            <LoadMoreButton onClick={loadBooks}>load more</LoadMoreButton>
+                {loading && !books.length? <>still loading...</> : <ErrorBoundary><Books books={books}/></ErrorBoundary>}
+                <LoadMoreButton onClick={loadBooks}>load more</LoadMoreButton>
         </App>
     );
 }

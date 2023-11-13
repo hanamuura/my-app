@@ -3,14 +3,18 @@ import { Book } from "./Book";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 export const Books = ({books}) => {
+
+    if(!books.length){
+        throw Error("error");
+    }
     
     return (
         <Container>
-            {books.length? books.map(book =>
+            {books.map(book =>
                 <Link style={{textDecoration: "none", color: "black"}} key={book.id} to={`/books/${book.id}`}>
                     <Book volumeInfo={book.volumeInfo}/>
                 </Link>
-            ) : <>no books</>}
+            )}
         </Container>
     )
 }
