@@ -13,7 +13,7 @@ export const Header = ({filterOptions, children, options, query, setQuery, searc
                     placeholder="search"
                 />
                 <FilterBox>
-                    <select
+                    <CustomSelect
                         value={query.order}
                         onChange={e => setQuery({...query, order: e.target.value})}
                     >
@@ -21,8 +21,8 @@ export const Header = ({filterOptions, children, options, query, setQuery, searc
                         {options.map(el =>
                             <option key={el.id}>{el.data}</option>
                         )}
-                    </select>
-                    <select
+                    </CustomSelect>
+                    <CustomSelect
                         value={query.filter}
                         onChange={e => setQuery({...query, filter: e.target.value})}
                     >
@@ -30,21 +30,34 @@ export const Header = ({filterOptions, children, options, query, setQuery, searc
                         {filterOptions.map(el =>
                             <option key={el.id}>{el.data}</option>
                         )}
-                    </select>
+                    </CustomSelect>
                 </FilterBox>
             </FilterContainer>
         </Container>
     )
 }
 
+const CustomSelect = styled.select`
+  width: 100px;
+  height: auto;
+  margin: 5px;
+  padding: 2px;
+`
+
 const FilterBox = styled.div`
   display: flex;
+  width: auto;
+  height: auto;
+  justify-content: space-around;
 `
 
 const FilterContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: auto;
+    height: auto;
+  align-items: center;
 `
 
 const Title = styled.h1`
@@ -54,9 +67,10 @@ const SearchBar = styled.input`
     border: none;
     height: 25px;
     outline: none;
-    width: 175px;
     transition: .2s ease-in-out;
     margin-bottom: 10px;
+    width: 95%;
+  padding: 5px;
 `
 
 const Container = styled.div`

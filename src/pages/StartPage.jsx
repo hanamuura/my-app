@@ -16,29 +16,37 @@ export function StartPage(){
     ])
 
     const [filterOptions, setFilterOptions] = useState([
-        {id: "intitle", data: "in the title"},
-        {id: "inauthor", data: "in the author"},
-        {id: "inpublisher", data: "in the publisher"},
-        {id: "subject", data: "in the category list of the volume"},
-        {id: "isbn", data: " ISBN number"},
-        {id: "lccn", data: "Library of Congress Control Number"},
-        {id: "oclc", data: "Online Computer Library Center number"},
+        {id: "poetry", data: "poetry"},
+        {id: "medical", data: "medical"},
+        {id: "history", data: "history"},
+        {id: "computers", data: "computers"},
+        {id: "biography", data: "biography"},
+        {id: "art", data: "art"},
+        {id: "all", data: "all"},
     ]);
 
     const [query, setQuery] = useState(
         {filter: "", order: "", search: ""}
     );
 
-    const searchBooks = (e) => {
+    const searchBooks = async (e) => {
         if(e.code === "Enter"){
             console.log(query);
-            axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query.search}+${filterOptions.filter(option => option.data === query.filter)[0]?.id ?? ""}&orderBy=${query.order}&startIndex=0&maxResults=30&key=AIzaSyDjJ0e_iIZTMOwJ-DKP8r0qKKofxY_4_Sk`)
-                .then(res => {
-                    setBooks(res.data.items);
-                    setTotalItems(prev => prev = 30);
-                    console.log(res.data);
-                })
-                .catch(rej => console.log(rej));
+            try{
+                await axios.get(`https://www.googleapis.com/books/v1/volumes?q=intitle:${query.search}+subject:${filterOptions.filter(option => option.data === query.filter)[0]?.id ?? ""}&orderBy=${query.order}&startIndex=0&maxResults=30&key=AIzaSyDjJ0e_iIZTMOwJ-DKP8r0qKKofxY_4_Sk`)
+                    .then(res => {
+                        setBooks(res.data.items);
+                        setTotalItems(prev => prev = 30);
+                        console.log(res.data);
+                    })
+                    .catch(rej => {
+                        console.log(rej);
+                        alert("Invalid request");
+                    });
+            } catch(err){
+                alert("error")
+            }
+
         }
     }
 
@@ -48,33 +56,38 @@ export function StartPage(){
         setLoading(true);
         axios.get(`https://www.googleapis.com/books/v1/volumes?q=flowers&startIndex=0&maxResults=30&key=AIzaSyDjJ0e_iIZTMOwJ-DKP8r0qKKofxY_4_Sk`)
             .then(res => {
-                setBooks(res.data.items);
+                setBooks(res.data.items ?? []);
                 console.log(res.data.items);
-                setTotalItems(prev => books.length)
+                setTotalItems(prev => prev + books.length);
                 setLoading(false);
             })
-            .catch(rej => console.log(rej));
+            .catch(rej => {
+                console.log(rej);
+                alert("Invalid request");
+            });
     }, [])
 
     const loadBooks = () => {
         axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query.search? query.search : "flowers"}+${filterOptions.filter(option => option.data === query.filter)[0]?.id ?? ""}${query.order? `&orderBy=${query.order}` : ""}&startIndex=${startIndex}&maxResults=30&key=AIzaSyDjJ0e_iIZTMOwJ-DKP8r0qKKofxY_4_Sk`)
             .then(res => {
-                console.log(res.data.items);
-                setBooks([...books, ...res.data.items])
+                setBooks([...books, ...res.data.items ?? []]);
                 setLoading(false);
-                setTotalItems(prev => prev + 30);
-                setStartIndex(prev => prev + 30);
+                setTotalItems(prev => prev + (res.data.items?.length ?? 0));
+                setStartIndex(prev => prev + (res.data.items?.length ?? 0));
             })
-            .catch(rej => console.log(rej));
-        setTimeout(() => {
-            console.log(books);
-        }, 0)
+            .catch(rej => {
+                console.log(rej);
+                alert("Invalid request");
+            });
     }
 
     return (
         <App>
-            <Header filterOptions={filterOptions} query={query} setQuery={setQuery} options={options} search={searchBooks}>{!loading? `total Items: ${totalItems}` : null}</Header>
-                {loading && !books.length? <>still loading...</> : <ErrorBoundary><Books books={books}/></ErrorBoundary>}
+            <Header filterOptions={filterOptions} query={query} setQuery={setQuery} options={options} search={searchBooks}>{!loading? `Total Items: ${totalItems}` : null}</Header>
+                {loading && !books.length? <>still loading...</> :
+                    <ErrorBoundary>
+                        <Books books={books}/>
+                    </ErrorBoundary>}
                 <LoadMoreButton onClick={loadBooks}>load more</LoadMoreButton>
         </App>
     );

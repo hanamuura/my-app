@@ -1,4 +1,5 @@
 import react, {Component} from "react";
+import styled from "styled-components";
 
 export default class ErrorBoundary extends Component {
     constructor(props) {
@@ -23,9 +24,9 @@ export default class ErrorBoundary extends Component {
         if(this.state.hasError) {
 
                 return (
-                <>
-                    <p>no books</p>
-                </>
+                <Container>
+                    <span>no books</span>
+                </Container>
             )
         }
 
@@ -34,3 +35,11 @@ export default class ErrorBoundary extends Component {
 
 
 }
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 30px;
+`

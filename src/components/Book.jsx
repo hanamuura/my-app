@@ -7,6 +7,9 @@ export const Book = ({volumeInfo}) => {
         <Container>
             <img src={volumeInfo?.imageLinks?.smallThumbnail}/>
             <Title>{volumeInfo.title}</Title>
+            <div>
+                {volumeInfo.categories? volumeInfo.categories.map(c => <span>{c}</span>) : null}
+            </div>
             <Description>{volumeInfo.description? volumeInfo.description.length > 100? volumeInfo.description.slice(0, 100) : volumeInfo.description : null}</Description>
             <Authors>{volumeInfo.authors? volumeInfo.authors.map(author => <Body>{author}</Body>) : null}</Authors>
         </Container>

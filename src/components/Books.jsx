@@ -4,7 +4,7 @@ import styled from "styled-components";
 import {Link} from "react-router-dom";
 export const Books = ({books}) => {
 
-    if(!books.length){
+    if(books || !books.length){
         throw Error("error");
     }
     
