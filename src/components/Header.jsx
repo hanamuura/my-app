@@ -9,7 +9,7 @@ export const Header = ({filterOptions, children, options, query, setQuery, searc
                 <SearchBar  
                     value = {query.search}
                     onChange = {e => setQuery({...query, search: e.target.value})}
-                    onKeyPress = {search}
+                    onKeyDown = {search}
                     placeholder="search"
                 />
                 <FilterBox>
@@ -28,7 +28,7 @@ export const Header = ({filterOptions, children, options, query, setQuery, searc
                     >
                         <option disabled value="">select one...</option>
                         {filterOptions.map(el =>
-                            <option key={el.id}>{el.data}</option>
+                            <option key={el.data}>{el.data}</option>
                         )}
                     </CustomSelect>
                 </FilterBox>
