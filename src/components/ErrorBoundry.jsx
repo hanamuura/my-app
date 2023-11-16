@@ -11,6 +11,11 @@ export default class ErrorBoundary extends Component {
         }
     }
 
+    static getDerivedStateFromError(error) {
+        // Update state so the next render will show the fallback UI.
+        return { hasError: true };
+    }
+
     componentDidCatch(error, errorInfo) {
         console.log("error is here");
         this.setState({
@@ -22,8 +27,7 @@ export default class ErrorBoundary extends Component {
 
     render(){
         if(this.state.hasError) {
-
-                return (
+            return (
                 <Container>
                     <span>no books</span>
                 </Container>

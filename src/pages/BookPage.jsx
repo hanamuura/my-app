@@ -1,7 +1,6 @@
-import react, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
-import {Book} from "../components/Book";
 import styled from "styled-components";
 
 export function BookPage(){

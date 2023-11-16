@@ -4,6 +4,7 @@ import {Header} from "../components/Header";
 import {Books} from "../components/Books";
 import styled from "styled-components";
 import ErrorBoundary from "../components/ErrorBoundry"
+import Query from "../API/Query";
 
 export function StartPage(){
     const [books, setBooks] = useState([]);
@@ -33,7 +34,7 @@ export function StartPage(){
         if(e.code === "Enter"){
             console.log(query);
             try{
-                await axios.get(`https://www.googleapis.com/books/v1/volumes?q=intitle:${query.search}+subject:${filterOptions.filter(option => option.data === query.filter)[0]?.data ?? ""}&orderBy=${query.order}&startIndex=0&maxResults=30&key=AIzaSyDjJ0e_iIZTMOwJ-DKP8r0qKKofxY_4_Sk`)
+                await axios.get(`https://www.googleapis.com/books/v1/volumes?q=intitle:${query.search}+subject:${filterOptions.filter(option => option.data === query.filter)[0]?.data ?? ""}&orderBy=${query.order}&startIndex=0&maxResults=30&key=${process.env.REACT_APP_API_KEY}`)
                     .then(res => {
                         setBooks(res.data.items);
                         setTotalItems(prev => prev = 30);
@@ -55,7 +56,7 @@ export function StartPage(){
     useEffect(() => {
         axios.get(`https://www.googleapis.com/books/v1/volumes?q=flowers&startIndex=0&maxResults=30&key=AIzaSyDjJ0e_iIZTMOwJ-DKP8r0qKKofxY_4_Sk`)
             .then(res => {
-                setTotalItems(prev => prev + res.data?.items.length);
+                setTotalItems(prev => prev + (res.data?.items?.length ?? []));
                 setBooks(res.data.items);
             })
             .catch(rej => {
@@ -86,8 +87,16 @@ export function StartPage(){
         <App>
             <Header filterOptions={filterOptions} query={query} setQuery={setQuery} options={options} search={searchBooks}>{!loading? `Total Items: ${totalItems}` : null}</Header>
                 {loading? <>still loading...</> :
-                        <Books books={books}/>}
+                    <ErrorBoundary>
+                        <Books books={books}/>
+                    </ErrorBoundary>
+                }
             <LoadMoreButton onClick={loadBooks}>load more</LoadMoreButton>
+            <button onClick={() => {
+                console.log(Query());
+            }}>
+                log
+            </button>
         </App>
     );
 }
