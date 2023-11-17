@@ -28,7 +28,7 @@ export const Header = ({filterOptions, children, options, query, setQuery, searc
                     >
                         <option disabled value="">select one...</option>
                         {filterOptions.map(el =>
-                            <option key={el.data}>{el.data}</option>
+                            <option key={el}>{el}</option>
                         )}
                     </CustomSelect>
                 </FilterBox>

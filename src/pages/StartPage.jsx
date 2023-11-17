@@ -5,6 +5,7 @@ import {Books} from "../components/Books";
 import styled from "styled-components";
 import ErrorBoundary from "../components/ErrorBoundry"
 import Query from "../API/Query";
+import {logDOM} from "@testing-library/react";
 
 export function StartPage(){
     const [books, setBooks] = useState([]);
@@ -17,27 +18,28 @@ export function StartPage(){
     ])
 
     const [filterOptions, setFilterOptions] = useState([
-        {data: "poetry"},
-        {data: "medical"},
-        {data: "history"},
-        {data: "computers"},
-        {data: "biography"},
-        {data: "art"},
-        {data: "all"},
+        "poetry",
+        "medical",
+        "history",
+        "computers",
+        "biography",
+        "art",
+        "all",
     ]);
 
     const [query, setQuery] = useState(
         {filter: "", order: "", search: ""}
     );
 
-    const searchBooks = async (e) => {
+    const searchBooks = (e) => {
         if(e.code === "Enter"){
             console.log(query);
             try{
-                await axios.get(`https://www.googleapis.com/books/v1/volumes?q=intitle:${query.search}+subject:${filterOptions.filter(option => option.data === query.filter)[0]?.data ?? ""}&orderBy=${query.order}&startIndex=0&maxResults=30&key=${process.env.REACT_APP_API_KEY}`)
+                Query(query.search, {option: "subject", value: query}, 0, 30)
                     .then(res => {
+                        console.log(query);
                         setBooks(res.data.items);
-                        setTotalItems(prev => prev = 30);
+                        setTotalItems(prev => prev + res.data.totalItems);
                         console.log(res.data);
                     })
                     .catch(rej => {
@@ -54,9 +56,9 @@ export function StartPage(){
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get(`https://www.googleapis.com/books/v1/volumes?q=flowers&startIndex=0&maxResults=30&key=AIzaSyDjJ0e_iIZTMOwJ-DKP8r0qKKofxY_4_Sk`)
+        Query("flowers", null, 0, 30)
             .then(res => {
-                setTotalItems(prev => prev + (res.data?.items?.length ?? []));
+                setTotalItems(prev => prev = res.data.totalItems);
                 setBooks(res.data.items);
             })
             .catch(rej => {
@@ -70,7 +72,7 @@ export function StartPage(){
     }, [])
 
     const loadBooks = () => {
-        axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query.search? query.search : "flowers"}+${filterOptions.filter(option => option.data === query.filter)[0]?.data ?? ""}${query.order? `&orderBy=${query.order}` : ""}&startIndex=${startIndex}&maxResults=30&key=AIzaSyDjJ0e_iIZTMOwJ-DKP8r0qKKofxY_4_Sk`)
+        Query(query.search, {option: "subject", value: query}, startIndex, 30)
             .then(res => {
                 setBooks([...books, ...res.data.items ?? []]);
                 setLoading(false);
@@ -92,11 +94,6 @@ export function StartPage(){
                     </ErrorBoundary>
                 }
             <LoadMoreButton onClick={loadBooks}>load more</LoadMoreButton>
-            <button onClick={() => {
-                console.log(Query());
-            }}>
-                log
-            </button>
         </App>
     );
 }
