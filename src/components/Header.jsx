@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import {CustomSelect} from "./UI/CustomSelect";
+import {Select} from "./UI/Select";
 
 export const Header = ({filterOptions, children, options, query, setQuery, search}) => {
     return (
@@ -14,35 +16,22 @@ export const Header = ({filterOptions, children, options, query, setQuery, searc
                 />
                 <FilterBox>
                     <CustomSelect
-                        value={query.order}
-                        onChange={e => setQuery({...query, order: e.target.value})}
-                    >
-                        <option disabled value="">select one...</option>
-                        {options.map(el =>
-                            <option key={el.id}>{el.data}</option>
-                        )}
-                    </CustomSelect>
-                    <CustomSelect
+                        value = {query.order}
+                        onChange = {e => setQuery({...query, order: e})}
+                        defaultValue={options[options.length - 1].data}
+                        options = {options}
+                    />
+                    <Select
                         value={query.filter}
-                        onChange={e => setQuery({...query, filter: e.target.value})}
-                    >
-                        <option disabled value="">select one...</option>
-                        {filterOptions.map(el =>
-                            <option key={el}>{el}</option>
-                        )}
-                    </CustomSelect>
+                        onChange={e => setQuery({...query, filter: e})}
+                        defaultValue={filterOptions[filterOptions.length - 1]}
+                        options={filterOptions.slice(0, filterOptions.length - 2)}
+                    />
                 </FilterBox>
             </FilterContainer>
         </Container>
     )
 }
-
-const CustomSelect = styled.select`
-  width: 100px;
-  height: auto;
-  margin: 5px;
-  padding: 2px;
-`
 
 const FilterBox = styled.div`
   display: flex;

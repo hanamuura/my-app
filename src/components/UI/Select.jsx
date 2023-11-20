@@ -1,8 +1,6 @@
 import react from "react";
 
-export let CustomSelect = ({options, defaultValue, value, onChange}) => {
-
-//for 2 options
+export const Select = ({options, defaultValue, value, onChange}) => {
     return(
         <select
             value={value}
@@ -10,8 +8,8 @@ export let CustomSelect = ({options, defaultValue, value, onChange}) => {
         >
             <option>{defaultValue}</option>
             {options.map(option =>
-                <option key={option.id} value = {option.data}>
-                    {option.data}
+                <option key={option} value = {option}>
+                    {option}
                 </option>
             )}
         </select>
