@@ -19,13 +19,13 @@ export const Header = ({filterOptions, children, options, query, setQuery, searc
                         value = {query.order}
                         onChange = {e => setQuery({...query, order: e})}
                         defaultValue={options[options.length - 1].data}
-                        options = {options}
+                        options = {options.slice(0, options.length - 1)}
                     />
                     <Select
                         value={query.filter}
                         onChange={e => setQuery({...query, filter: e})}
                         defaultValue={filterOptions[filterOptions.length - 1]}
-                        options={filterOptions.slice(0, filterOptions.length - 2)}
+                        options={filterOptions.slice(0, filterOptions.length - 1)}
                     />
                 </FilterBox>
             </FilterContainer>

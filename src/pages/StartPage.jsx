@@ -58,7 +58,7 @@ export function StartPage(){
     useEffect(() => {
         Query("flowers", null, 0, 30)
             .then(res => {
-                setTotalItems(prev => prev = res.data?.items.length);
+                setTotalItems(prev => prev = res.data?.items?.length);
                 setBooks(res.data.items);
             })
             .catch(rej => {
